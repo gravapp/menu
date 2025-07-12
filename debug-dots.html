@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Dots Test</title>
+    <style>
+        .bnav_bottom_nav_wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #333;
+            padding: 10px;
+            z-index: 999;
+        }
+        
+        .bnav_main_menu {
+            display: flex;
+            overflow-x: auto;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 20px;
+        }
+        
+        .bnav_main_menu li {
+            flex: 0 0 auto;
+            min-width: 80px;
+            background: #555;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+        
+        /* Dot indicators styling */
+        .scroll-dots-container {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            pointer-events: auto;
+            background: rgba(255,255,255,0.9);
+            padding: 6px 10px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .scroll-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0,0,0,0.1);
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 0 3px;
+            min-width: 12px;
+            min-height: 12px;
+        }
+
+        .scroll-dot:hover {
+            background: rgba(0,0,0,0.6);
+            transform: scale(1.3);
+            border-color: rgba(0,0,0,0.3);
+        }
+
+        .scroll-dot.active {
+            background: rgba(0,0,0,0.9);
+            transform: scale(1.3);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            border-color: rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="bnav_bottom_nav_wrapper" data-scrollbar-dots="1">
+        <ul class="bnav_main_menu">
+            <li>Menu 1</li>
+            <li>Menu 2</li>
+            <li>Menu 3</li>
+            <li>Menu 4</li>
+            <li>Menu 5</li>
+            <li>Menu 6</li>
+            <li>Menu 7</li>
+            <li>Menu 8</li>
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const $bottomNavWrapper = $('.bnav_bottom_nav_wrapper');
+            const $menuList = $bottomNavWrapper.find('ul.bnav_main_menu');
+            
+            console.log('Debug: Testing dots functionality');
+            console.log('Data attribute:', $bottomNavWrapper.data('scrollbar-dots'));
+            console.log('Menu items:', $menuList.find('li').length);
+            console.log('Container width:', $menuList.width());
+            console.log('Total width:', $menuList[0].scrollWidth);
+            
+            // Add scrollable class
+            $bottomNavWrapper.addClass('scrollable');
+            
+            // Create dots
+            const $dotsContainer = $('<div class="scroll-dots-container"></div>');
+            for (let i = 0; i < 3; i++) {
+                const $dot = $('<button class="scroll-dot" data-index="' + i + '"></button>');
+                $dotsContainer.append($dot);
+            }
+            $bottomNavWrapper.append($dotsContainer);
+            
+            console.log('Dots container added:', $bottomNavWrapper.find('.scroll-dots-container').length);
+        });
+    </script>
+</body>
+</html> 
