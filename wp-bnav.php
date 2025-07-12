@@ -103,6 +103,10 @@ Wp_Bnav_Public_Scroll::init();
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav-scroll-manager.php';
 Wp_Bnav_Scroll_Manager::init();
 
+// Initialize dots functionality
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav-dots.php';
+Wp_Bnav_Dots::init();
+
 do_action( 'wp_bnav/loaded' );
 
 /**
