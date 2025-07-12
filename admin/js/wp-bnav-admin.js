@@ -53,61 +53,27 @@
             }
         }
 
-        // Initial setup
-        toggleScrollDotsSettings();
-        toggleAutoEnableSettings();
-        toggleScrollIndicatorsSettings();
-
-        // Event handlers
-        $('#bnav_menu_item_scrollbar').on('change', function() {
+        // Only run if we're on the settings page
+        if ($('#bnav_menu_item_scrollbar').length > 0) {
+            // Initial setup
             toggleScrollDotsSettings();
             toggleAutoEnableSettings();
             toggleScrollIndicatorsSettings();
-        });
 
-        $('#bnav_auto_enable_scrollbar').on('change', function() {
-            const thresholdRow = $('#bnav_scrollbar_threshold').closest('tr');
-            if ($(this).is(':checked')) {
-                thresholdRow.show();
-            } else {
-                thresholdRow.hide();
-            }
-        });
-
-        // Live preview for customizer
-        if (typeof wp !== 'undefined' && wp.customize) {
-            // Scroll dots setting
-            wp.customize('bnav_show_scroll_dots', function(value) {
-                value.bind(function(newval) {
-                    if (newval) {
-                        $('.bnav_bottom_nav_wrapper').attr('data-scrollbar-dots', '1');
-                    } else {
-                        $('.bnav_bottom_nav_wrapper').removeAttr('data-scrollbar-dots');
-                        $('.scroll-dots-container').remove();
-                    }
-                    // Trigger scroll functionality update
-                    $(window).trigger('resize');
-                });
+            // Event handlers
+            $('#bnav_menu_item_scrollbar').on('change', function() {
+                toggleScrollDotsSettings();
+                toggleAutoEnableSettings();
+                toggleScrollIndicatorsSettings();
             });
 
-            // Auto-enable scrollbar setting
-            wp.customize('bnav_auto_enable_scrollbar', function(value) {
-                value.bind(function(newval) {
-                    if (newval) {
-                        $('.bnav_bottom_nav_wrapper').attr('data-auto-enable-scrollbar', '1');
-                    } else {
-                        $('.bnav_bottom_nav_wrapper').removeAttr('data-auto-enable-scrollbar');
-                    }
-                    $(window).trigger('resize');
-                });
-            });
-
-            // Scrollbar threshold setting
-            wp.customize('bnav_scrollbar_threshold', function(value) {
-                value.bind(function(newval) {
-                    $('.bnav_bottom_nav_wrapper').attr('data-scrollbar-threshold', newval);
-                    $(window).trigger('resize');
-                });
+            $('#bnav_auto_enable_scrollbar').on('change', function() {
+                const thresholdRow = $('#bnav_scrollbar_threshold').closest('tr');
+                if ($(this).is(':checked')) {
+                    thresholdRow.show();
+                } else {
+                    thresholdRow.hide();
+                }
             });
         }
     });

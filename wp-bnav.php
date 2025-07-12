@@ -91,6 +91,14 @@ register_deactivation_hook( __FILE__, 'deactivate_wp_bnav' );
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav.php';
 
+// Initialize scroll settings
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav-scroll-settings.php';
+Wp_Bnav_Scroll_Settings::init();
+
+// Initialize public scroll functionality
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav-public-scroll.php';
+Wp_Bnav_Public_Scroll::init();
+
 do_action( 'wp_bnav/loaded' );
 
 /**

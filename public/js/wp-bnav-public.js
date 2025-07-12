@@ -4,14 +4,35 @@
 (function($) {
     'use strict';
 
+    // Utility function for debouncing
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
     class BNavScrollManager {
         constructor() {
             this.init();
         }
 
         init() {
-            this.setupScrollFunctionality();
-            this.bindEvents();
+            // Wait for DOM to be fully ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    this.setupScrollFunctionality();
+                    this.bindEvents();
+                });
+            } else {
+                this.setupScrollFunctionality();
+                this.bindEvents();
+            }
         }
 
         setupScrollFunctionality() {
@@ -28,15 +49,18 @@
         }
 
         initializeScrollFeatures($wrapper, $menuList) {
-            const scrollbarEnabled = $wrapper.data('scrollbar') === 1;
-            const autoEnableScrollbar = $wrapper.data('auto-enable-scrollbar') === 1;
+            // Get settings from data attributes (set by PHP)
+            const scrollbarEnabled = $wrapper.data('scrollbar') == 1;
+            const autoEnableScrollbar = $wrapper.data('auto-enable-scrollbar') == 1;
             const scrollbarThreshold = parseInt($wrapper.data('scrollbar-threshold')) || 5;
-            const showScrollDots = $wrapper.data('scrollbar-dots') === 1;
-            const showScrollIndicators = $wrapper.data('scrollbar-indicators') === 1;
+            const showScrollDots = $wrapper.data('scrollbar-dots') == 1;
+            const showScrollIndicators = $wrapper.data('scrollbar-indicators') == 1;
 
             const menuItemCount = $menuList.find('li').length;
-            const containerWidth = $menuList.width();
-            const totalWidth = $menuList[0].scrollWidth;
+            
+            // Check if content overflows
+            const containerWidth = $menuList.outerWidth();
+            const totalWidth = $menuList[0] ? $menuList[0].scrollWidth : 0;
             const isOverflowing = totalWidth > containerWidth;
 
             // Determine if scrolling should be enabled
@@ -82,7 +106,7 @@
             // Remove existing dots
             $wrapper.find('.scroll-dots-container').remove();
 
-            const containerWidth = $menuList.width();
+            const containerWidth = $menuList.outerWidth();
             const totalWidth = $menuList[0].scrollWidth;
             
             if (totalWidth <= containerWidth) return;
@@ -192,7 +216,7 @@
         }
 
         scrollToSection($menuList, index, totalSections) {
-            const containerWidth = $menuList.width();
+            const containerWidth = $menuList.outerWidth();
             const totalWidth = $menuList[0].scrollWidth;
             const sectionWidth = totalWidth / totalSections;
             const targetScroll = Math.min(index * sectionWidth, totalWidth - containerWidth);
@@ -205,9 +229,13 @@
             if ($dots.length === 0) return;
 
             const scrollLeft = $menuList.scrollLeft();
-            const containerWidth = $menuList.width();
+            const containerWidth = $menuList.outerWidth();
             const totalWidth = $menuList[0].scrollWidth;
-            const scrollPercentage = scrollLeft / (totalWidth - containerWidth);
+            const maxScroll = totalWidth - containerWidth;
+            
+            if (maxScroll <= 0) return;
+            
+            const scrollPercentage = scrollLeft / maxScroll;
             const activeIndex = Math.round(scrollPercentage * ($dots.length - 1));
 
             $dots.removeClass('active');
@@ -219,7 +247,7 @@
             const $rightIndicator = $wrapper.find('.scroll-indicator-right');
             
             const scrollLeft = $menuList.scrollLeft();
-            const maxScroll = $menuList[0].scrollWidth - $menuList.width();
+            const maxScroll = $menuList[0].scrollWidth - $menuList.outerWidth();
 
             // Show/hide left indicator
             if (scrollLeft > 10) {
@@ -254,19 +282,6 @@
                 self.setupScrollFunctionality();
             });
         }
-    }
-
-    // Utility function for debouncing
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
     }
 
     // Initialize when DOM is ready
