@@ -99,6 +99,10 @@ Wp_Bnav_Scroll_Settings::init();
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav-public-scroll.php';
 Wp_Bnav_Public_Scroll::init();
 
+// Initialize scroll manager
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-bnav-scroll-manager.php';
+Wp_Bnav_Scroll_Manager::init();
+
 do_action( 'wp_bnav/loaded' );
 
 /**
